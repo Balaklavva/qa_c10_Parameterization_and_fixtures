@@ -16,12 +16,10 @@ class TestCourierLogin:
         [
             # TODO: добавьте минимум 3 набора данных.
             # Должны быть позитивные и негативные сценарии.
-            #
-            # Например:
-            # ("valid", "valid", 200),
-            # ("missing", "valid", 400),
-            # ("valid", "missing", 400),
-            # ("invalid", "valid", 404),
+            ("valid", "valid", 200),
+            ("missing", "valid", 400),
+            ("valid", "missing", 400),
+            ("invalid", "valid", 404),
         ],
     )
     def test_courier_login(
@@ -33,22 +31,35 @@ class TestCourierLogin:
     ):
         # TODO: подготовьте login и password для каждого сценария.
         #
-        # Для позитивного сценария используйте данные
-        # созданного фикстурой курьера.
-        #
-        # Для негативных сценариев сформируйте необходимые
-        # некорректные или отсутствующие данные.
-
-        login = None
-        password = None
+        if login_type == "valid":
+            login = courier["login"]
+        elif login_type == "invalid":
+            login = "loginerror"
+        else:
+            login = None
+        
+        if password_type == "valid":
+            password = courier["password"]
+        else:
+            password = None
 
         payload = {
             "login": login,
             "password": password,
         }
 
+        if login is None:
+            payload["login"] = ""
+        if password is None:
+            payload["password"] = ""
+
         # TODO: отправьте POST /api/v1/courier/login.
-        response = None
+        response = requests.post(f"{BASE_URL}/api/v1/courier/login", json=payload)
+        assert response.status_code == expected_status
 
         # TODO: проверьте ожидаемый статус ответа.
-        assert response.status_code == expected_status
+        response_json = response.json()
+        if expected_status == 200:
+            assert "id" in response_json
+        else:
+            assert "message" in response_json

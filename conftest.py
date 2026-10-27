@@ -21,22 +21,29 @@ def courier():
         "password": "1234",
         "firstName": "Test",
     }
-
+    
     # TODO: создайте курьера через POST /api/v1/courier.
     # Сохраните ответ, чтобы убедиться, что создание прошло успешно.
     response = requests.post(
         f"{BASE_URL}/api/v1/courier",
         json=courier_data,
     )
-
+    assert response.status_code == 201, f"Ошибка при создании курьера: {response.text}"
+    
     # TODO: получите id созданного курьера.
     # Для этого используйте POST /api/v1/courier/login
     # с login и password из courier_data.
     #
-    # login_response = requests.post(...)
-    # courier_id = login_response.json()["id"]
-
-    courier_id = None
+    login_response = requests.post(
+        f"{BASE_URL}/api/v1/courier/login",
+        json={
+            "login": courier_data["login"],
+            "password": courier_data["password"]
+        }
+    )
+    assert login_response.status_code == 200, f"Ошбка авторизации: {login_response.text}"
+    courier_id = login_response.json()["id"]
+    
 
     # TODO: передайте в тест данные, необходимые для авторизации.
     yield {
@@ -47,3 +54,4 @@ def courier():
 
     # TODO: после завершения теста удалите созданного курьера.
     # DELETE /api/v1/courier/{id}
+    requests.delete(f"{BASE_URL}/api/v1/courier/{courier_id}")
