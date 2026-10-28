@@ -14,15 +14,11 @@ class TestCourierLogin:
     @pytest.mark.parametrize(
         "login_type, password_type, expected_status",
         [
-            # TODO: добавьте минимум 3 набора данных.
-            # Должны быть позитивные и негативные сценарии.
-            #
-            # Например:
-            # ("valid", "valid", 200),
-            # ("missing", "valid", 400),
-            # ("valid", "missing", 400),
-            # ("invalid", "valid", 404),
-        ],
+            ("valid", "valid", 200),
+            ("missing", "valid", 400),
+            ("valid", "missing", 400),
+            ("unknown", "valid", 404),
+        ]
     )
     def test_courier_login(
         self,
@@ -31,24 +27,33 @@ class TestCourierLogin:
         password_type,
         expected_status,
     ):
-        # TODO: подготовьте login и password для каждого сценария.
-        #
-        # Для позитивного сценария используйте данные
-        # созданного фикстурой курьера.
-        #
-        # Для негативных сценариев сформируйте необходимые
-        # некорректные или отсутствующие данные.
-
-        login = None
-        password = None
+        if login_type == "valid":
+            login = courier["login"]
+        elif login_type == "unknown":
+            login = "loginerror"
+        else:
+            login = None
+        
+        if password_type == "valid":
+            password = courier["password"]
+        else:
+            password = None
 
         payload = {
             "login": login,
             "password": password,
         }
 
-        # TODO: отправьте POST /api/v1/courier/login.
-        response = None
+        if login is None:
+            payload["login"] = ""
+        if password is None:
+            payload["password"] = ""
 
-        # TODO: проверьте ожидаемый статус ответа.
+        response = requests.post(f"{BASE_URL}/api/v1/courier/login", json=payload)
         assert response.status_code == expected_status
+
+        response_json = response.json()
+        if expected_status == 200:
+            assert "id" in response_json
+        else:
+            assert "message" in response_json
