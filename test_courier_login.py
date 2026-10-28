@@ -14,13 +14,11 @@ class TestCourierLogin:
     @pytest.mark.parametrize(
         "login_type, password_type, expected_status",
         [
-            # TODO: добавьте минимум 3 набора данных.
-            # Должны быть позитивные и негативные сценарии.
             ("valid", "valid", 200),
             ("missing", "valid", 400),
             ("valid", "missing", 400),
             ("invalid", "valid", 404),
-        ],
+        ]
     )
     def test_courier_login(
         self,
@@ -29,8 +27,6 @@ class TestCourierLogin:
         password_type,
         expected_status,
     ):
-        # TODO: подготовьте login и password для каждого сценария.
-        #
         if login_type == "valid":
             login = courier["login"]
         elif login_type == "invalid":
@@ -53,11 +49,9 @@ class TestCourierLogin:
         if password is None:
             payload["password"] = ""
 
-        # TODO: отправьте POST /api/v1/courier/login.
         response = requests.post(f"{BASE_URL}/api/v1/courier/login", json=payload)
         assert response.status_code == expected_status
 
-        # TODO: проверьте ожидаемый статус ответа.
         response_json = response.json()
         if expected_status == 200:
             assert "id" in response_json
