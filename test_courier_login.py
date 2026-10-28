@@ -55,5 +55,5 @@ class TestCourierLogin:
         response_json = response.json()
         if expected_status == 200:
             assert "id" in response_json
-        else:
+        if expected_status != 200:
             assert "message" in response_json
