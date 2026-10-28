@@ -17,7 +17,7 @@ class TestCourierLogin:
             ("valid", "valid", 200),
             ("missing", "valid", 400),
             ("valid", "missing", 400),
-            ("invalid", "valid", 404),
+            ("unknown", "valid", 404),
         ]
     )
     def test_courier_login(
@@ -29,7 +29,7 @@ class TestCourierLogin:
     ):
         if login_type == "valid":
             login = courier["login"]
-        elif login_type == "invalid":
+        elif login_type == "unknown":
             login = "loginerror"
         else:
             login = None
