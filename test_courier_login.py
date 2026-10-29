@@ -51,6 +51,9 @@ class TestCourierLogin:
         response_json = response.json()
         if expected_status == 200:
             assert "id" in response_json
-        if expected_status != 200:
+        if expected_status == 400:
             assert "message" in response_json
-            assert response_json["message"] != ""
+            assert response_json["message"] == "Недостаточно данных для входа"
+        if expected_status == 404:
+            assert "message" in response_json
+            assert response_json["message"] == "Учетная запись не найдена"
