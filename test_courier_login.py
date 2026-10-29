@@ -50,6 +50,7 @@ class TestCourierLogin:
 
         response_json = response.json()
         if expected_status == 200:
-            print(f"Успешная авторизация! ID курьера: {response_json['id']}")
-        elif expected_status in (400, 404):
-            print(f"Ошибка входа. Текст сообщения: {response_json.get('message', 'Нет поля message')}")
+            assert response_json.get("id") is not None, f"Нет id в ответе: {response_json}"
+        if expected_status in (400, 404):
+            assert response_json.get("message") is not None, f"Нет message в ответе: {response_json}"
+            assert response_json.get("message") != "", f"Пустой message в ответе: {response_json}"
