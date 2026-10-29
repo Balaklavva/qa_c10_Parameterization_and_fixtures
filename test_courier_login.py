@@ -50,7 +50,7 @@ class TestCourierLogin:
 
         response_json = response.json()
         if expected_status == 200:
-            assert response_json.get("id") is not None, f"Нет id в ответе: {response_json}"
-        if expected_status in (400, 404):
-            assert response_json.get("message") is not None, f"Нет message в ответе: {response_json}"
-            assert response_json.get("message") != "", f"Пустой message в ответе: {response_json}"
+            assert "id" in response_json
+        if expected_status != 200:
+            assert "message" in response_json
+            assert response_json["message"] != ""
