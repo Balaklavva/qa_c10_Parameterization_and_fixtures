@@ -32,22 +32,18 @@ class TestCourierLogin:
         elif login_type == "unknown":
             login = "loginerror"
         else:
-            login = None
+            login = ""
         
         if password_type == "valid":
             password = courier["password"]
         else:
-            password = None
+            password = ""
 
         payload = {
             "login": login,
             "password": password,
         }
 
-        if login is None:
-            payload["login"] = ""
-        if password is None:
-            payload["password"] = ""
 
         response = requests.post(f"{BASE_URL}/api/v1/courier/login", json=payload)
         assert response.status_code == expected_status
