@@ -54,6 +54,4 @@ class TestCourierLogin:
         
         if expected_status in (400, 404):
             assert "message" in response_json
-        
-            error_message = response_json["message"]
-            assert len(error_message) > 0
+            assert response_json["message"]
